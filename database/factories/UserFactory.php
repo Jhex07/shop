@@ -21,9 +21,15 @@ class UserFactory extends Factory
             'name' => fake()->name(),
             'last_name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
-            'password' => bcrypt(123456789),
+            'password' => '123456789',
             'remember_token' => Str::random(10),
         ];
     }
 
+    public function configure()
+    {
+        return $this->afterCreating(function (User $user){
+            $user->assignRole('user');
+        });
+    }
 }

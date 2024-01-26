@@ -1,18 +1,58 @@
 <?php
 
+use App\Models\Category;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\CategoryController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+Auth::routes();
+
+
+Route::get('/', [ProductController::class, 'home'])->name('products.home');
+Route::get('/', [CategoryController::class, 'home'])->name('categories.home');
+
+
+Route::group(['middleware' => ['auth']], function (){
+    Route::get('/home', [HomeController::class, 'index'])->name('home');
+
+    Route::group(['prefix' => 'users', 'controller' => UserController::class], function (){
+        Route::get('/', 'index')->name('users.index')->middleware('can:users.index');
+        Route::post('/store', 'store')->name('users.store');
+        Route::get('/edit{user}', 'edit')->name('users.edit');
+        Route::get('/show/{user}', 'show')->name('users.show');
+        Route::put('/update/{user}', 'update')->name('users.update');
+        Route::delete('/{user}', 'destroy')->name('users.destroy');
+        Route::get('/get-roles', 'getRoles')->name('users.getRoles');
+    });
+
+    Route::group(['prefix' => 'products', 'controller' => ProductController::class], function () {
+        Route::get('{product}', 'show')->name('products.show');
+        Route::get('/', 'index')->name('products.index')->middleware('can:products.index');
+        Route::post('/store', 'store')->name('products.store');
+        Route::get('/edit{product}', 'edit')->name('products.edit');
+        Route::put('/update/{product}', 'update')->name('products.update');
+        Route::delete('/{product}', 'destroy')->name('products.destroy');
+    });
+
+    Route::group(['prefix' => 'categories', 'controller' => CategoryController::class], function (){
+        Route::get('/', 'index')->name('categories.index');
+        Route::get('/get-categories', 'getCategories')->name('products.getCategories');
+        Route::get('/{category}', 'show')->name('categories.show');
+        Route::post('/', 'store')->name('categories.store');
+        Route::get('/{user}/edit', 'edit')->name('categories.edit');
+        Route::put('/update/{category}', 'update')->name('categories.update');
+        Route::delete('/{category}', 'destroy')->name('categories.destroy');
+
+    });
+
+
 });
