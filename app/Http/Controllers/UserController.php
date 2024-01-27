@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use App\Http\Requests\User\UserRequest;
-use Yajra\DataTables\Facades\DataTables;
+
 
 class UserController extends Controller
 {
@@ -79,7 +79,7 @@ class UserController extends Controller
             throw $th;
         }
 
-        dd($request->all(), $user);
+
     }
 
 

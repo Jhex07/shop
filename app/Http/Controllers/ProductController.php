@@ -3,13 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\Product\ProductRequest;
-use App\Models\Category;
+use App\Http\Requests\Product\ProductUpdateRequest;
+use App\Http\Traits\UploadFile;
 
 class ProductController extends Controller
 {
+    use UploadFile;
+
     public function home()
     {
         $products = Product::with('category')->whereHas('category')->where('stock', '>', 0)->get();
@@ -18,7 +22,7 @@ class ProductController extends Controller
 
     public function index(Request $request)
     {
-        $products = Product::with('category')->get();
+        $products = Product::with('category', 'file')->get();
         $categories = Category::get();
         if(!$request->ajax()){
             return view('products.index', compact('products', 'categories'));
@@ -39,6 +43,7 @@ class ProductController extends Controller
             DB::beginTransaction();
             $product = new Product($request->all());
             $product->save();
+            $this->UploadFile($product, $request);
             DB::commit();
             if(!$request->ajax()){
                 return back()->with('success', 'product created');
@@ -51,12 +56,12 @@ class ProductController extends Controller
         }
     }
 
-    public function update(ProductRequest $request, Product $product)
+    public function update(ProductUpdateRequest $request, Product $product)
     {
         try{
             DB::beginTransaction();
             $product -> update($request->all());
-
+            $this->UploadFile($product, $request);
             DB::commit();
             if(!$request->ajax()){
                 return back()->with('success', 'Product update');
@@ -68,7 +73,6 @@ class ProductController extends Controller
             throw $th;
         }
 
-        dd($request->all(), $product);
     }
 
 
@@ -94,6 +98,7 @@ class ProductController extends Controller
     public function destroy(Request $request, Product $product)
     {
         $product -> delete();
+        $this->deleteFile($product);
         if(!$request->ajax()){
             return back()->with('succes', 'User delete');
         }

@@ -8,17 +8,27 @@
         <table class="table table-bordered" id="products_table">
           <thead>
             <tr>
+
+                <th>Imagen</th>
               <th>Nombre</th>
               <th>Descripción</th>
               <th>Precio</th>
+              <th>Cantidad</th>
               <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="(product, index) in products" :key="index">
+
+              <td>
+                <div class="d-flex justify-content-center">
+                    <img :src="product.file.route" alt="Imagen Libro" class="img-thumbnail" width="40" height="40">
+                </div>
+              </td>
               <td>{{ product.name }}</td>
               <td>{{ product.description }}</td>
               <td>{{ product.price }}</td>
+              <td>{{ product.stock }}</td>
               <td>
                 <div class="d-flex justify-content-center">
                   <button @click="editProduct(product)" class="btn btn-warning btn-sm" title="Editar">

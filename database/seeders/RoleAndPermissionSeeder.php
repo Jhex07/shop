@@ -28,7 +28,7 @@ class RoleAndPermissionSeeder extends Seeder
             'products.update',
             'products.destroy',
             'categories.index',
-            'categories.get-all',
+            'categories.getCategories',
             'categories.create',
             'categories.store',
             'categories.edit',

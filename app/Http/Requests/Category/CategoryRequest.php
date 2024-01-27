@@ -1,21 +1,17 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Category;
 
 use Illuminate\Foundation\Http\FormRequest;
 
 class CategoryRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
+
     public function authorize()
     {
-        return false;
+        return true;
     }
-    
+
 
     public function rules()
     {
@@ -31,5 +27,13 @@ class CategoryRequest extends FormRequest
         }
 
         return $rules;
+    }
+
+    public function messages()
+    {
+        return [
+            'name.required' => 'El nombre es requerido',
+            'name.string' => 'El nombre debe de ser valido',
+        ];
     }
 }

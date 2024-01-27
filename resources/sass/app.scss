@@ -17,8 +17,13 @@
 // Vue select
 @import 'vue-select/dist/vue-select.css';
 
-.card_size {
-	width: 18rem;
+.category-link {
+    text-decoration: none;
+    color: inherit;
+}
+.category-link:hover {
+    text-decoration: none;
+    color: inherit;
 }
 
 body {

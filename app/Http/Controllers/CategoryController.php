@@ -6,8 +6,7 @@ use App\Models\User;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Http\Requests\CategoryRequest;
-use Yajra\DataTables\Facades\DataTables;
+use App\Http\Requests\Category\CategoryRequest;
 
 class CategoryController extends Controller
 {
@@ -23,7 +22,7 @@ class CategoryController extends Controller
     {
         $categories = Category::get();
         if(!$request->ajax()){
-            return view('categories.index');
+            return view('categories.index', compact('categories'));
         }
         return response()->json(['categories'=> $categories], 200);
     }
@@ -39,7 +38,6 @@ class CategoryController extends Controller
         try{
             DB::beginTransaction();
             $category = new Category($request->all());
-            $category->assignRole($request->input('role'));
             $category->save();
             DB::commit();
             if(!$request->ajax()){
@@ -54,13 +52,14 @@ class CategoryController extends Controller
     }
 
 
-    public function show(Request $request, User $user)
-{
+    public function show(Request $request, Category $category)
+
+    {
         if (!$request->ajax()) {
-            return view('users.show', compact('user'));
+            return view('categories.show', compact('category'));
         }
-        return response()->json(['user' => $user], 200);
-}
+        return response()->json(['category' => $category], 200);
+    }
 
 
 
@@ -71,11 +70,19 @@ class CategoryController extends Controller
 
     public function update(CategoryRequest $request, Category $category)
     {
-        $category -> update($request->all());
-        if(!$request->ajax()){
-            return back()->with('success', 'Category updated');
+        try{
+            DB::beginTransaction();
+            $category -> update($request->all());
+            DB::commit();
+            if(!$request->ajax()){
+                return back()->with('success', 'Category update');
+            }
+            return response()->json([], 204);
+
+        } catch(\Throwable $th){
+            DB::rollback();
+            throw $th;
         }
-        return response()->json([], 204);
     }
 
 

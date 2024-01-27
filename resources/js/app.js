@@ -10,12 +10,14 @@ import vSelect from 'vue-select';
 
 import UsersTable from './components/Users/UsersTable.vue'
 import ProductTable from './components/Products/ProductTable.vue'
+import CategoryTable from './components/Categories/CategoryTable.vue'
 import BackendError from './components/Components/BackendError.vue'
 
 const app = createApp({
     components: {
         UsersTable,
-        ProductTable
+        ProductTable,
+        CategoryTable
     }
 });
 

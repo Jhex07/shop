@@ -13,6 +13,19 @@
                         <div class="modal-body">
                             <section class="row">
 
+                                <div class="col-12 d-flex justify-content-center mt-1">
+                                    <img :src="image_preview" alt="Imagen Libro" class="img-thumbnail" width="170" height="170">
+                                </div>
+
+                                <div class="col-12 mt-1 ">
+                                    <label for="file" class="form-label">Imagen</label>
+                                    <input type="file" :class="`form-control ${back_errors['file'] ? 'is-invalid' : ''}`" id="file"
+                                        accept="image/*" @change="previewImage">
+                                    <span class="invalid-feedback" v-if="back_errors['file']">
+                                        {{ back_errors['file'] }}
+                                    </span>
+                                </div>
+
                                 <div class="col-12 mt-2">
                                     <label class="form-label" for="name">Nombre</label>
                                     <Field name="name" v-slot="{ errorMessage, field }" v-model="product.name">
@@ -95,6 +108,7 @@ export default {
             this.product = new_value;
             if (!this.product.id) return;
             this.is_create = false;
+            this.image_preview = this.product.file.route
         }
     },
     computed: {
@@ -112,6 +126,8 @@ export default {
         product: {},
         is_create: true,
         back_errors: {},
+        image_preview: '/storage/images/product/default.png',
+		file: null,
         categories: [],
         };
     },
@@ -125,25 +141,39 @@ export default {
                 this.categories = response.data.categories;
             } catch (error) {
                 console.error(error.response);
-                // Manejar errores si es necesario
             }
         },
         async saveProduct() {
             try {
-                if (this.is_create) await axios.post('/products/store', this.product);
-                else await axios.put(`/products/update/${this.product.id}`, this.product);
+                const product = this.createFormData(this.product)
+                if (this.is_create) await axios.post('/products/store', product);
+                else await axios.post(`/products/update/${this.product.id}`, product);
                 await successMessage({ is_delete: false, reload: true });
             } catch (error) {
                 console.error(error.response);
             }
         },
+        createFormData(data) {
+			const form_data = new FormData()
+			if (this.file) form_data.append('file', this.file, this.file.name)
+			for (const key in data) {
+				form_data.append(key, data[key])
+			}
+			return form_data
+		},
+        previewImage(event) {
+			this.file = event.target.files[0]
+			this.image_preview = URL.createObjectURL(this.file)
+		},
         reset() {
         this.is_create = true;
         this.product = {};
         this.category = null
         this.back_errors = {};
         this.$parent.product = {};
+        this.image_preview = '/storage/images/books/default.png'
         setTimeout(() => this.$refs.form.resetForm(), 100);
+        document.getElementById('file').value = ''
         }
     }
     };

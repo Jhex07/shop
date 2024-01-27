@@ -60,6 +60,12 @@
                                 </a>
                             @endrole
 
+                            @role('admin')
+                                <a class="dropdown-item" href="{{ route('categories.index') }}">
+                                    Categorias
+                                </a>
+                            @endrole
+
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                 @csrf
                             </form>

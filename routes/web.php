@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Category;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
@@ -39,17 +39,16 @@ Route::group(['middleware' => ['auth']], function (){
         Route::get('/', 'index')->name('products.index')->middleware('can:products.index');
         Route::post('/store', 'store')->name('products.store');
         Route::get('/edit{product}', 'edit')->name('products.edit');
-        Route::put('/update/{product}', 'update')->name('products.update');
+        Route::post('/update/{product}', 'update')->name('products.update');
         Route::delete('/{product}', 'destroy')->name('products.destroy');
     });
 
     Route::group(['prefix' => 'categories', 'controller' => CategoryController::class], function (){
-        Route::get('/', 'index')->name('categories.index');
+        Route::get('/', 'index')->name('categories.index')->middleware('can:categories.index');
         Route::get('/get-categories', 'getCategories')->name('products.getCategories');
         Route::get('/{category}', 'show')->name('categories.show');
-        Route::post('/', 'store')->name('categories.store');
-        Route::get('/{user}/edit', 'edit')->name('categories.edit');
-        Route::put('/update/{category}', 'update')->name('categories.update');
+        Route::post('/store', 'store')->name('categories.store')->middleware('can:categories.store');
+        Route::post('/update/{category}', 'update')->name('categories.update')->middleware('can:categories.update');
         Route::delete('/{category}', 'destroy')->name('categories.destroy');
 
     });
