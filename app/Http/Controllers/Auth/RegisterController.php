@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Models\Cart;
 use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -28,7 +29,13 @@ class RegisterController extends Controller
     {
         $user = new User($request->all());
         $user->save();
+        $user->assignRole('user');
         Auth::login($user);
+
+        $cart = new Cart();
+        $cart->user_id = $user->id;
+        $cart->save();
+
         return redirect($this->redirectPath());
     }
 }

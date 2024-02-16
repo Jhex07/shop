@@ -18,10 +18,10 @@ class DatabaseSeeder extends Seeder
         $this->call(RoleAndPermissionSeeder::class);
         $this->call(UserSeeder::class);
         $this->call(CategorySeeder::class);
+        $this->call(CartSeeder::class);
 
 
         Product::factory(30)->create();
         User::factory(10)->create();
-        Cart::factory(10)->create();
     }
 }

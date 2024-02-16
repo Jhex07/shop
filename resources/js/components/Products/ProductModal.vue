@@ -146,6 +146,7 @@ export default {
         async saveProduct() {
             try {
                 const product = this.createFormData(this.product)
+                console.log(product)
                 if (this.is_create) await axios.post('/products/store', product);
                 else await axios.post(`/products/update/${this.product.id}`, product);
                 await successMessage({ is_delete: false, reload: true });
@@ -155,6 +156,7 @@ export default {
         },
         createFormData(data) {
 			const form_data = new FormData()
+            delete data.file
 			if (this.file) form_data.append('file', this.file, this.file.name)
 			for (const key in data) {
 				form_data.append(key, data[key])

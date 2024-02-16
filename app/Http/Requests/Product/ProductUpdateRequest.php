@@ -12,7 +12,7 @@ class ProductUpdateRequest extends ProductRequest
     public function rules()
     {
 
-        $this->rules['file'] = ['sometimes', 'image'];
+        $this->rules['file'] = ['nullable', 'image'];
         return $this->rules;
     }
 

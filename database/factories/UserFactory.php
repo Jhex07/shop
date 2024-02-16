@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Cart;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -23,12 +24,17 @@ class UserFactory extends Factory
             'email' => fake()->unique()->safeEmail(),
             'password' => '123456789',
             'remember_token' => Str::random(10),
+
         ];
     }
 
     public function configure()
     {
-        return $this->afterCreating(function (User $user){
+        return $this->afterCreating(function (User $user) {
+            if (!$user->cart) {
+                $cart = Cart::factory()->create(['user_id' => $user->id]);
+            }
+
             $user->assignRole('user');
         });
     }

@@ -30,6 +30,13 @@ class ProductController extends Controller
         return response()->json(['products'=> $products], 200);
     }
 
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
+        $products = Product::where('name', 'like', '%' . $query . '%')->get();
+        return view('products.search', compact('products', 'query'));
+    }
+
 
     public function create()
     {
@@ -76,12 +83,15 @@ class ProductController extends Controller
     }
 
 
-    public function show(Request $request, Product $product)
+    public function show(Request $request, $id)
     {
-        if(!$request->ajax()){
-            return view('products.show', compact('product'));
+        $product = Product::with('file')->findOrFail($id);
+
+        if ($request->ajax()) {
+            return response()->json(['product' => $product], 200);
         }
-        return response()->json(['product' => $product], 200);
+
+        return view('products.show', compact('product'));
     }
 
 

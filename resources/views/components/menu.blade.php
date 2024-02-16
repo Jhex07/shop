@@ -11,11 +11,15 @@
 
         </button>
 
+
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
-            <ul class="navbar-nav me-auto">
+            <ul class="navbar-nav me-auto"></ul>
 
-            </ul>
+            <form class="d-flex" action="{{ route('products.search') }}" method="GET">
+                <input class="form-control me-2" type="search" name="query" placeholder="Buscar" aria-label="Search">
+                <button class="btn btn-outline-primary" type="submit">Buscar</button>
+            </form>
 
 
             <ul class="navbar-nav ms-auto">
@@ -28,6 +32,7 @@
                             </a>
                         </li>
                     @endif
+
 
                     @if (Route::has('register'))
                         <li class="nav-item">
@@ -65,6 +70,14 @@
                                     Categorias
                                 </a>
                             @endrole
+
+                            @auth
+
+                                <a class="dropdown-item" href="{{ route('cart.show') }}">
+                                    Carrito
+                                </a>
+
+                            @endauth
 
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                 @csrf

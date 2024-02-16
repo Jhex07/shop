@@ -46,7 +46,7 @@ export const handlerErrors = async error => {
 	return error_object
 }
 
-export const successMessage = async ({is_delete = false, reload = false }) => {
+export const successMessage = async ({ is_delete = false, reload = false }) => {
 	await Swal.fire({
 		icon: 'success',
 		title: 'Felicidades!',
@@ -56,6 +56,17 @@ export const successMessage = async ({is_delete = false, reload = false }) => {
 	})
 	if (reload) window.location.reload()
 }
+
+export const showSuccessMessage = async ({ is_added, reload = false }) => {
+    await Swal.fire({
+      icon: 'success',
+      title: 'Éxito',
+    text: is_added
+        ? 'Producto agregado al carrito'
+        : 'No se pudo agregar al carrito'
+    });
+    if (reload) window.location.reload();
+  };
 
 export const deleteMessage = async () => {
 	const { isConfirmed } = await Swal.fire({
